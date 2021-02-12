@@ -166,14 +166,14 @@ def _filter_small_weights(weights):
 
     return weights
 
-def _compose_basket(weights, ticker_map):
+def _compose_basket(weights, ticker_map, hedged_ticker_symbol):
     basket = {}
 
     for index in range(int(len(weights)/2)):
         pweight = weights[index]
         nweight = weights[int(len(weights) / 2) + index]
         weight = pweight - nweight
-        if weight != 0:
+        if weight != 0 and ticker_map[index] != hedged_ticker_symbol:
             basket[ticker_map[index]] = float(weight) * -1.0
 
     return basket
@@ -190,5 +190,5 @@ def build_basket(hedged_ticker_symbol, basket_ticker_symbols):
     weights = np.array(weights)
     weights = _filter_small_weights(weights)
 
-    return _compose_basket(weights, ticker_map)
+    return _compose_basket(weights, ticker_map, hedged_ticker_symbol)
 
